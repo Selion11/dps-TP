@@ -20,7 +20,7 @@ class CurrencyConverterTest {
 		when(httpClient.get(anyString(), anyMap(), anyMap()))
 				.thenReturn(new HttpResponse(200, "{\"data\":{\"USD\":1.05}}"));
 
-		final var converter = new CurrencyConverter(httpClient);
+		final var converter = new BalanceConverter(httpClient);
 
 		// When
 		final var result = converter.convert("EUR", "USD", 100);
@@ -36,7 +36,7 @@ class CurrencyConverterTest {
 		when(httpClient.get(anyString(), anyMap(), anyMap()))
 				.thenReturn(new HttpResponse(500, "Fatal error in server"));
 
-		final var converter = new CurrencyConverter(httpClient);
+		final var converter = new BalanceConverter(httpClient);
 
 		// When, Then
 		assertThrows(ConversionServerUnavailable.class, () -> converter.convert("EUR", "USD", 100));
