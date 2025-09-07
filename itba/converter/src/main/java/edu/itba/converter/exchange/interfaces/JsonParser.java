@@ -1,7 +1,7 @@
 package edu.itba.converter.exchange.interfaces;
 
-import edu.itba.converter.exchange.Currency;
-import edu.itba.converter.exchange.HttpResponse;
+import edu.itba.converter.exchange.models.Currency;
+import edu.itba.converter.exchange.models.HttpResponse;
 
 import java.math.BigDecimal;
 import java.util.Map;

@@ -1,7 +1,7 @@
-package edu.itba.converter.exchange.httpclient;
+package edu.itba.converter.exchange.implementations;
 
 import edu.itba.converter.exchange.interfaces.HttpClient;
-import edu.itba.converter.exchange.HttpResponse;
+import edu.itba.converter.exchange.models.HttpResponse;
 import kong.unirest.core.Unirest;
 
 import java.util.Map;

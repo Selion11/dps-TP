@@ -1,13 +1,12 @@
 package edu.itba.converter.boot;
 
 import com.google.gson.Gson;
-import edu.itba.converter.exchange.Balance;
-import edu.itba.converter.exchange.Conversion;
-import edu.itba.converter.exchange.Currency;
-import edu.itba.converter.exchange.BalanceConverter;
-import edu.itba.converter.exchange.httpclient.UnirestHttpClient;
-import edu.itba.converter.exchange.jsonparser.GsonJsonParser;
-import edu.itba.converter.exchange.rategetter.FreeCurrencyApiRateGetter;
+import edu.itba.converter.exchange.models.Balance;
+import edu.itba.converter.exchange.models.Currency;
+import edu.itba.converter.exchange.implementations.BalanceConverter;
+import edu.itba.converter.exchange.implementations.UnirestHttpClient;
+import edu.itba.converter.exchange.implementations.GsonJsonParser;
+import edu.itba.converter.exchange.implementations.FreeCurrencyApiRateGetter;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;

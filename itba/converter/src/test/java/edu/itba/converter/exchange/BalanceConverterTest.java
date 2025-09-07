@@ -2,7 +2,12 @@ package edu.itba.converter.exchange;
 
 import edu.itba.converter.exchange.exception.UnableToConvertException;
 import edu.itba.converter.exchange.exception.UnavailableRateService;
+import edu.itba.converter.exchange.implementations.BalanceConverter;
 import edu.itba.converter.exchange.interfaces.RateGetter;
+import edu.itba.converter.exchange.models.Balance;
+import edu.itba.converter.exchange.models.Conversion;
+import edu.itba.converter.exchange.models.Currency;
+import edu.itba.converter.exchange.models.Rate;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;

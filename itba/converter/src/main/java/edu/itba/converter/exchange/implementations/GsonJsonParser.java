@@ -1,10 +1,10 @@
-package edu.itba.converter.exchange.jsonparser;
+package edu.itba.converter.exchange.implementations;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
-import edu.itba.converter.exchange.Currency;
-import edu.itba.converter.exchange.HttpResponse;
+import edu.itba.converter.exchange.models.Currency;
+import edu.itba.converter.exchange.models.HttpResponse;
 import edu.itba.converter.exchange.interfaces.JsonParser;
 
 import java.math.BigDecimal;

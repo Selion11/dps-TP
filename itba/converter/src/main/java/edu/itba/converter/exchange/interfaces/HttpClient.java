@@ -1,6 +1,6 @@
 package edu.itba.converter.exchange.interfaces;
 
-import edu.itba.converter.exchange.HttpResponse;
+import edu.itba.converter.exchange.models.HttpResponse;
 
 import java.util.Map;
 

@@ -1,6 +1,7 @@
 package edu.itba.converter.exchange;
 
-import edu.itba.converter.exchange.httpclient.UnirestHttpClient;
+import edu.itba.converter.exchange.implementations.UnirestHttpClient;
+import edu.itba.converter.exchange.models.HttpResponse;
 import kong.unirest.core.GetRequest;
 import kong.unirest.core.Unirest;
 import org.junit.jupiter.api.Test;

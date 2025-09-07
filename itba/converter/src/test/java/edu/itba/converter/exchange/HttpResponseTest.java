@@ -1,4 +1,5 @@
 package edu.itba.converter.exchange;
+import edu.itba.converter.exchange.models.HttpResponse;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

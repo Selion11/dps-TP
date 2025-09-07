@@ -1,7 +1,7 @@
-package edu.itba.converter.exchange.rategetter;
+package edu.itba.converter.exchange.implementations;
 
-import edu.itba.converter.exchange.Currency;
-import edu.itba.converter.exchange.Rate;
+import edu.itba.converter.exchange.models.Currency;
+import edu.itba.converter.exchange.models.Rate;
 import edu.itba.converter.exchange.exception.UnavailableRateService;
 import edu.itba.converter.exchange.interfaces.HttpClient;
 import edu.itba.converter.exchange.interfaces.JsonParser;

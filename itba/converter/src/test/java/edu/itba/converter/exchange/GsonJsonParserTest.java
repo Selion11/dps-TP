@@ -1,8 +1,10 @@
 package edu.itba.converter.exchange;
 
-import edu.itba.converter.exchange.jsonparser.GsonJsonParser;
+import edu.itba.converter.exchange.implementations.GsonJsonParser;
 
 import com.google.gson.Gson;
+import edu.itba.converter.exchange.models.Currency;
+import edu.itba.converter.exchange.models.HttpResponse;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;

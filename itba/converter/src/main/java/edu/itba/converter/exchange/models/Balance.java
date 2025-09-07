@@ -1,4 +1,4 @@
-package edu.itba.converter.exchange;
+package edu.itba.converter.exchange.models;
 
 import java.math.BigDecimal;
 

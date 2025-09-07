@@ -1,7 +1,7 @@
 package edu.itba.converter.exchange.interfaces;
 
-import edu.itba.converter.exchange.Currency;
-import edu.itba.converter.exchange.Rate;
+import edu.itba.converter.exchange.models.Currency;
+import edu.itba.converter.exchange.models.Rate;
 import edu.itba.converter.exchange.exception.UnavailableRateService;
 
 import java.util.Date;

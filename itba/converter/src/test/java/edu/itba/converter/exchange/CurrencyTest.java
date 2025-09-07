@@ -1,5 +1,6 @@
 package edu.itba.converter.exchange;
 
+import edu.itba.converter.exchange.models.Currency;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,8 +1,8 @@
 package edu.itba.converter.exchange.interfaces;
 
-import edu.itba.converter.exchange.Balance;
-import edu.itba.converter.exchange.Conversion;
-import edu.itba.converter.exchange.Currency;
+import edu.itba.converter.exchange.models.Balance;
+import edu.itba.converter.exchange.models.Conversion;
+import edu.itba.converter.exchange.models.Currency;
 import edu.itba.converter.exchange.exception.UnableToConvertException;
 
 import java.util.Date;

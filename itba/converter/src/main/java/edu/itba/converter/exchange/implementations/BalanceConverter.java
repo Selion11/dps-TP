@@ -1,9 +1,13 @@
-package edu.itba.converter.exchange;
+package edu.itba.converter.exchange.implementations;
 
 import edu.itba.converter.exchange.exception.UnableToConvertException;
 import edu.itba.converter.exchange.exception.UnavailableRateService;
 import edu.itba.converter.exchange.interfaces.RateGetter;
 import edu.itba.converter.exchange.interfaces.Converter;
+import edu.itba.converter.exchange.models.Balance;
+import edu.itba.converter.exchange.models.Conversion;
+import edu.itba.converter.exchange.models.Currency;
+import edu.itba.converter.exchange.models.Rate;
 
 import java.util.Date;
 import java.util.List;
