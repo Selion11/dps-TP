@@ -1,33 +1,72 @@
 package edu.itba.converter.exchange.rategetter;
 
 import edu.itba.converter.exchange.Currency;
-import edu.itba.converter.exchange.HttpClient;
-import edu.itba.converter.exchange.RateGetter;
+import edu.itba.converter.exchange.Rate;
+import edu.itba.converter.exchange.exception.UnavailableRateService;
+import edu.itba.converter.exchange.interfaces.HttpClient;
+import edu.itba.converter.exchange.interfaces.JsonParser;
+import edu.itba.converter.exchange.interfaces.RateGetter;
 
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public class FreeCurrencyApiRateGetter implements RateGetter {
-    private final HttpClient httpClient;
+import java.util.stream.Collectors;
 
-    public FreeCurrencyApiRateGetter(HttpClient httpClient) {
+
+public class FreeCurrencyApiRateGetter implements RateGetter {
+
+    private final HttpClient httpClient;
+    private final JsonParser jsonParser;
+    private final SimpleDateFormat formatter;
+
+
+    private final String baseUrl = "https://api.freecurrencyapi.com/v1/latest";
+    private final String apiKey = "fca_live_7cyd8YJ9UocVUfp4QvXZSyFccdh3JRO2VVuJW4mc";
+
+    public FreeCurrencyApiRateGetter(HttpClient httpClient, JsonParser jsonParser, SimpleDateFormat formatter) {
         this.httpClient = httpClient;
+        this.jsonParser = jsonParser;
+        this.formatter = formatter;
+    }
+
+    private static List<Rate> mapper(Map<Currency, BigDecimal> map){
+        return map.entrySet().stream().map(entry -> new Rate(entry.getKey(), entry.getValue())).toList();
     }
 
     @Override
-    public Map<Currency, Double> getCurrentRate(Currency fromCurrency, List<Currency> toCurrency) {
-        // Query the API using API Key, base currency and target currency.
-			final var response = this.httpClient.get("https://api.freecurrencyapi.com/v1/latest",
-					Map.of("base_currency", fromCurrency, "currencies", toCurrency), Map.of("accept",
-							"application/json", "apikey", "fca_live_tMQ4oYRmk8T587mrTdOFbTREYXjqCLRkXwJUS4C6"));
+    public List<Rate> getCurrentRate(Currency fromCurrency, List<Currency> toCurrency) throws UnavailableRateService {
+        String currencies = toCurrency.stream()
+                .map(Currency::coin)
+                .collect(Collectors.joining(","));
 
-			// Check if the response is successful (status code 200).
-			if (response.status() != 200) {
-				System.err.println("Error: " + response.status());
-			}
+        final var response = this.httpClient.get(baseUrl,
+                Map.of("base_currency", fromCurrency.coin(), "currencies", currencies),
+                Map.of( "accept", "application/json", "apikey", apiKey));
+        if (response.status() != 200) {
+            String error = "Error: " + response.status() + "\n" + response.body();
+            throw new UnavailableRateService(error);
+        }
 
-			// Parse the response body to a Java object.
-			final var exchangeRateResponse = new Gson().fromJson(response.body(), ExchangeRateResponse.class);
-        return Map.of();
+        return mapper(jsonParser.parseActual(response));
     }
+
+    @Override
+    public List<Rate> getHistoricalRate(Currency fromCurrency, List<Currency> toCurrency, Date date) throws UnavailableRateService {
+        String currencies = toCurrency.stream()
+                .map(Currency::coin)  // Extract the coin field
+                .collect(Collectors.joining(","));
+        final var response = this.httpClient.get(baseUrl,
+                Map.of( "base_currency", fromCurrency.coin(), "currencies", currencies, "date",formatter.format(date)),
+                Map.of("accept", "application/json", "apikey", apiKey));
+
+        if (response.status() != 200) {
+            String error = "Error: " + response.status() + "\n" + response.body();
+            throw new UnavailableRateService(error);
+        }
+        return mapper(jsonParser.parseHistorical(response));
+    }
+
 }

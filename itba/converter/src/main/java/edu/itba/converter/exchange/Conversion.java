@@ -2,6 +2,5 @@ package edu.itba.converter.exchange;
 
 import java.math.BigDecimal;
 
-public record Balance(Currency currency, BigDecimal amount) {
-
+public record Conversion(Balance balance,BigDecimal rate) {
 }

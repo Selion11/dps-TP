@@ -1,6 +1,6 @@
 package edu.itba.converter.exchange.httpclient;
 
-import edu.itba.converter.exchange.HttpClient;
+import edu.itba.converter.exchange.interfaces.HttpClient;
 import edu.itba.converter.exchange.HttpResponse;
 import kong.unirest.core.Unirest;
 
