@@ -6,6 +6,7 @@ import edu.itba.converter.exchange.interfaces.RateGetter;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -77,5 +78,62 @@ class BalanceConverterTest {
 
         //Then
         assertThrows(UnableToConvertException.class, () -> converter.convert(from, targets));
+    }
+
+    @Test
+    void getHistoricalRatesReturnsExpectedConversions() throws Exception {
+        // Given
+        RateGetter rateGetter = mock(RateGetter.class);
+        BalanceConverter converter = new BalanceConverter(rateGetter);
+
+        Currency usd = new Currency("USD");
+        Currency eur = new Currency("EUR");
+        Currency jpy = new Currency("JPY");
+
+        BigDecimal balanceAmount = BigDecimal.valueOf(100);
+        Balance from = new Balance(usd, balanceAmount);
+        List<Currency> targets = List.of(eur, jpy);
+
+        BigDecimal rateEur = BigDecimal.valueOf(0.95);
+        BigDecimal rateJpy = BigDecimal.valueOf(147.8);
+
+        Date date = new Date();
+
+        when(rateGetter.getHistoricalRate(usd, targets, date))
+                .thenReturn(List.of(
+                        new Rate(eur, rateEur),
+                        new Rate(jpy, rateJpy)
+                ));
+
+        // When
+        List<Conversion> result = converter.getHistoricalRates(from, targets, date);
+
+        // Then
+        assertTrue(result.contains(new Conversion(new Balance(eur, balanceAmount.multiply(rateEur)), rateEur)));
+        assertTrue(result.contains(new Conversion(new Balance(jpy, balanceAmount.multiply(rateJpy)), rateJpy)));
+        assertEquals(2, result.size());
+    }
+
+    @Test
+    void getHistoricalRatesThrowsUnableToConvertExceptionWhenRateGetterFails() throws Exception {
+        // GIVEN
+        RateGetter rateGetter = mock(RateGetter.class);
+        BalanceConverter converter = new BalanceConverter(rateGetter);
+
+        Currency usd = new Currency("USD");
+        Currency eur = new Currency("EUR");
+        Balance from = new Balance(usd, BigDecimal.ONE);
+        List<Currency> targets = List.of(eur);
+        Date date = new Date();
+
+        //WHEN
+        when(rateGetter.getHistoricalRate(usd, targets, date))
+                .thenThrow(new UnavailableRateService("Service unavailable"));
+
+        // THEN
+        assertThrows(UnableToConvertException.class, () ->
+                converter.getHistoricalRates(from, targets, date)
+        );
+
     }
 }

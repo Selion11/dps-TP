@@ -94,4 +94,25 @@ class FreeCurrencyApiRateGetterTest {
         assertTrue(result.contains(new Rate(new Currency("EUR"), BigDecimal.valueOf(0.94))));
         assertTrue(result.contains(new Rate(new Currency("JPY"), BigDecimal.valueOf(147.8))));
     }
+
+
+    @Test
+    void testGetHistoricalRate_non200StatusThrows() {
+        //GIVEN
+        Currency from = new Currency("USD");
+        List<Currency> to = List.of(new Currency("EUR"));
+        Date date = new GregorianCalendar(2023, Calendar.SEPTEMBER, 1).getTime();
+        HttpResponse response = new HttpResponse(500, "Internal Server Error");
+
+        when(httpClient.get(anyString(), anyMap(), anyMap())).thenReturn(response);
+
+        //WHEN
+        UnavailableRateService thrown = assertThrows(
+                UnavailableRateService.class,
+                () -> rateGetter.getHistoricalRate(from, to, date)
+        );
+
+        //THEN
+        assertTrue(thrown.getMessage().contains("Error: 500"));
+    }
 }
