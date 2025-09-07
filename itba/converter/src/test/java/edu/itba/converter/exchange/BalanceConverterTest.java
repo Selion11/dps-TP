@@ -58,6 +58,8 @@ class BalanceConverterTest {
 
         // 123.45 * 950 = 117277.5
         assertTrue(result.contains(expectedEur));
+
+        assertEquals(result.size(), 2);
     }
 
     @Test
