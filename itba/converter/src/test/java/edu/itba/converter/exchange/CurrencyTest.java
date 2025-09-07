@@ -1,6 +1,5 @@
 package edu.itba.converter.exchange;
 
-import edu.itba.converter.exchange.exception.UnableToConvertException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
