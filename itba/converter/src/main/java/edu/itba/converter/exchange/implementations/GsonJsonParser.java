@@ -18,41 +18,34 @@ public class GsonJsonParser implements JsonParser {
         this.gson = gson;
     }
 
-    public Map<Currency, BigDecimal> parseActual(HttpResponse response) {
-        Type rootType = new TypeToken<Map<String, Map<String, Double>>>() {
-        }.getType();
-        Map<String, Map<String, Double>> root = gson.fromJson(response.body(), rootType);
-        Map<String, Double> data = root.get("data");
+    private Map<Currency, BigDecimal> parseRates(HttpResponse response, Type rootType, String dataKey) {
+        Map<String, ?> root = gson.fromJson(response.body(), rootType);
+        Map<String, ?> data = (Map<String, ?>) root.get(dataKey);
 
         Map<Currency, BigDecimal> rates = new HashMap<>();
-
         data.forEach((type, value) -> {
-            Currency c = new Currency(type);
-            rates.put(c, BigDecimal.valueOf(value));
+            if (value instanceof Double) {
+                rates.put(new Currency(type), BigDecimal.valueOf((Double) value));
+            } else if (value instanceof Map) {
+                ((Map<String, Double>) value).forEach((nestedType, nestedValue) ->
+                        rates.put(new Currency(nestedType), BigDecimal.valueOf(nestedValue))
+                );
+            }
         });
 
         return rates;
     }
 
     @Override
+    public Map<Currency, BigDecimal> parseActual(HttpResponse response) {
+        Type rootType = new TypeToken<Map<String, Map<String, Double>>>() {}.getType();
+        return parseRates(response, rootType, "data");
+    }
+
+    @Override
     public Map<Currency, BigDecimal> parseHistorical(HttpResponse response) {
-        Type rootType = new TypeToken<Map<String, Map<String, Map<String, Double>>>>() {
-        }.getType();
-        Map<String, Map<String, Map<String, Double>>> root = gson.fromJson(response.body(), rootType);
-
-        Map<Currency, BigDecimal> rates = new HashMap<>();
-
-        Map<String, Map<String, Double>> data = root.get("data");
-
-        data.forEach((date, i) -> {
-            i.forEach((type, value) -> {
-                Currency currency = new Currency(type);
-                rates.put(currency, BigDecimal.valueOf(value));
-            });
-        });
-        
-
-        return rates;
+        Type rootType = new TypeToken<Map<String, Map<String, Map<String, Double>>>>() {}.getType();
+        return parseRates(response, rootType, "data");
     }
 
 }

@@ -30,21 +30,22 @@ public class BalanceConverter implements Converter {
                 ).toList();
     }
 
-    public List<Conversion> convert(Balance fromBalance, List<Currency> toCurrency) throws UnableToConvertException {
+    private List<Conversion> convertWithRates(Balance fromBalance, List<Currency> toCurrency, Date conversionRate) throws UnableToConvertException {
         try {
-            List<Rate> rates = this.rateGetter.getCurrentRate(fromBalance.currency(), toCurrency);
+            List<Rate> rates = (conversionRate == null)
+                    ? this.rateGetter.getCurrentRate(fromBalance.currency(), toCurrency)
+                    : this.rateGetter.getHistoricalRate(fromBalance.currency(), toCurrency, conversionRate);
             return convertFromRates(fromBalance, rates);
         } catch (final UnavailableRateService e) {
             throw new UnableToConvertException(e.getMessage());
         }
     }
 
+    public List<Conversion> convert(Balance fromBalance, List<Currency> toCurrency) throws UnableToConvertException {
+        return convertWithRates(fromBalance, toCurrency, null);
+    }
+
     public List<Conversion> convertHistorical(Balance fromBalance, List<Currency> toCurrency, Date conversionRate) throws UnableToConvertException {
-        try {
-            List<Rate> rates = this.rateGetter.getHistoricalRate(fromBalance.currency(), toCurrency, conversionRate);
-            return convertFromRates(fromBalance, rates);
-        } catch (final UnavailableRateService e) {
-            throw new UnableToConvertException(e.getMessage());
-        }
+        return convertWithRates(fromBalance, toCurrency, conversionRate);
     }
 }

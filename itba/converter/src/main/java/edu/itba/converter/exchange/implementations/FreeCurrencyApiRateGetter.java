@@ -5,6 +5,7 @@ import edu.itba.converter.exchange.interfaces.HttpClient;
 import edu.itba.converter.exchange.interfaces.JsonParser;
 import edu.itba.converter.exchange.interfaces.RateGetter;
 import edu.itba.converter.exchange.models.Currency;
+import edu.itba.converter.exchange.models.HttpResponse;
 import edu.itba.converter.exchange.models.Rate;
 
 import java.math.BigDecimal;
@@ -35,39 +36,34 @@ public class FreeCurrencyApiRateGetter implements RateGetter {
         return map.entrySet().stream().map(entry -> new Rate(entry.getKey(), entry.getValue())).toList();
     }
 
-    @Override
-    public List<Rate> getCurrentRate(Currency fromCurrency, List<Currency> toCurrency) throws UnavailableRateService {
-        final String currentURL = baseUrl + "latest";
-        String currencies = toCurrency.stream()
-                .map(Currency::type)
-                .collect(Collectors.joining(","));
-
-        final var response = this.httpClient.get(currentURL,
-                Map.of("base_currency", fromCurrency.type(), "currencies", currencies),
-                Map.of("accept", "application/json", "apikey", apiKey));
+    private void validateResponse(HttpResponse response) throws UnavailableRateService {
         if (response.status() != 200) {
             String error = "Error: " + response.status() + "\n" + response.body();
             throw new UnavailableRateService(error);
         }
+    }
 
-        return mapper(jsonParser.parseActual(response));
+    private List<Rate> fetchRates(String endpoint, Map<String, Object> queryParams, boolean isHistorical) throws UnavailableRateService {
+        final var response = this.httpClient.get(baseUrl + endpoint, queryParams,
+                Map.of("accept", "application/json", "apikey", apiKey));
+        validateResponse(response);
+        return isHistorical ? mapper(jsonParser.parseHistorical(response)) : mapper(jsonParser.parseActual(response));
+    }
+
+    @Override
+    public List<Rate> getCurrentRate(Currency fromCurrency, List<Currency> toCurrency) throws UnavailableRateService {
+        String currencies = toCurrency.stream()
+                .map(Currency::type)
+                .collect(Collectors.joining(","));
+        return fetchRates("latest", Map.of("base_currency", fromCurrency.type(), "currencies", currencies), false);
     }
 
     @Override
     public List<Rate> getHistoricalRate(Currency fromCurrency, List<Currency> toCurrency, Date date) throws UnavailableRateService {
-        final String historicalURL = baseUrl + "historical";
         String currencies = toCurrency.stream()
-                .map(Currency::type)  // Extract the type field
+                .map(Currency::type)
                 .collect(Collectors.joining(","));
-        final var response = this.httpClient.get(historicalURL,
-                Map.of("date", formatter.format(date), "base_currency", fromCurrency.type(), "currencies", currencies),
-                Map.of("accept", "application/json", "apikey", apiKey));
-
-        if (response.status() != 200) {
-            String error = "Error: " + response.status() + "\n" + response.body();
-            throw new UnavailableRateService(error);
-        }
-        return mapper(jsonParser.parseHistorical(response));
+        return fetchRates("historical", Map.of("date", formatter.format(date), "base_currency", fromCurrency.type(), "currencies", currencies), true);
     }
 
 }
