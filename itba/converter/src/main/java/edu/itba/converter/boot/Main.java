@@ -30,18 +30,18 @@ public class Main {
 
         try {
             System.out.println("Actual Rates:");
-            System.out.println(fromBalance.amount().toString() + " " + fromBalance.currency().coin() + " to " + toCurrency1.coin() + " and " + toCurrency2.coin());
+            System.out.println(fromBalance.amount().toString() + " " + fromBalance.currency().type() + " to " + toCurrency1.type() + " and " + toCurrency2.type());
             converter.convert(fromBalance, List.of(toCurrency1, toCurrency2))
                     .forEach(b -> {
-                        System.out.println(b.balance().currency().coin() + " " + b.balance().amount() + " USED rate: " + b.rate());
+                        System.out.println(b.balance().currency().type() + " " + b.balance().amount() + " USED rate: " + b.rate());
                     });
 
 
             System.out.println("\nHistorical Rates:");
-            System.out.println(fromBalance.amount() + " " + fromBalance.currency().coin() + " to " + toCurrency1.coin() + " and " + toCurrency2.coin() + " in " + localDate);
+            System.out.println(fromBalance.amount() + " " + fromBalance.currency().type() + " to " + toCurrency1.type() + " and " + toCurrency2.type() + " in " + localDate);
             converter.convertHistorical(fromBalance, List.of(toCurrency1, toCurrency2), date)
                     .forEach(b -> {
-                        System.out.println(b.balance().currency().coin() + " " + b.balance().amount() + " USED rate: " + b.rate() + '\n');
+                        System.out.println(b.balance().currency().type() + " " + b.balance().amount() + " USED rate: " + b.rate() + '\n');
                     });
         } catch (final Exception e) {
             System.err.println("Error: " + e.getMessage());

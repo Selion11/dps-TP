@@ -39,11 +39,11 @@ public class FreeCurrencyApiRateGetter implements RateGetter {
     public List<Rate> getCurrentRate(Currency fromCurrency, List<Currency> toCurrency) throws UnavailableRateService {
         final String currentURL = baseUrl + "latest";
         String currencies = toCurrency.stream()
-                .map(Currency::coin)
+                .map(Currency::type)
                 .collect(Collectors.joining(","));
 
         final var response = this.httpClient.get(currentURL,
-                Map.of("base_currency", fromCurrency.coin(), "currencies", currencies),
+                Map.of("base_currency", fromCurrency.type(), "currencies", currencies),
                 Map.of("accept", "application/json", "apikey", apiKey));
         if (response.status() != 200) {
             String error = "Error: " + response.status() + "\n" + response.body();
@@ -57,10 +57,10 @@ public class FreeCurrencyApiRateGetter implements RateGetter {
     public List<Rate> getHistoricalRate(Currency fromCurrency, List<Currency> toCurrency, Date date) throws UnavailableRateService {
         final String historicalURL = baseUrl + "historical";
         String currencies = toCurrency.stream()
-                .map(Currency::coin)  // Extract the coin field
+                .map(Currency::type)  // Extract the type field
                 .collect(Collectors.joining(","));
         final var response = this.httpClient.get(historicalURL,
-                Map.of("date", formatter.format(date), "base_currency", fromCurrency.coin(), "currencies", currencies),
+                Map.of("date", formatter.format(date), "base_currency", fromCurrency.type(), "currencies", currencies),
                 Map.of("accept", "application/json", "apikey", apiKey));
 
         if (response.status() != 200) {

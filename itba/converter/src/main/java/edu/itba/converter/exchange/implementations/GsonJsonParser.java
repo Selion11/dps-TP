@@ -26,8 +26,8 @@ public class GsonJsonParser implements JsonParser {
 
         Map<Currency, BigDecimal> rates = new HashMap<>();
 
-        data.forEach((coin, value) -> {
-            Currency c = new Currency(coin);
+        data.forEach((type, value) -> {
+            Currency c = new Currency(type);
             rates.put(c, BigDecimal.valueOf(value));
         });
 
@@ -45,8 +45,8 @@ public class GsonJsonParser implements JsonParser {
         Map<String, Map<String, Double>> data = root.get("data");
 
         data.forEach((date, i) -> {
-            i.forEach((coin, value) -> {
-                Currency currency = new Currency(coin);
+            i.forEach((type, value) -> {
+                Currency currency = new Currency(type);
                 rates.put(currency, BigDecimal.valueOf(value));
             });
         });
