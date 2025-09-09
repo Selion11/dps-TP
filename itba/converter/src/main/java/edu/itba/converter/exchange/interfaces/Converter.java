@@ -13,5 +13,5 @@ public interface Converter {
 
     List<Conversion> convert(Balance fromBalance, List<Currency> toCurrency) throws UnableToConvertException;
 
-    List<Conversion> convertHistorical(Balance fromBalance, List<Currency> toCurrency, Date conversionRate) throws UnableToConvertException; //TODO un "converter" solo convierte. No da rates, hay q cambiar el nombre del metodo de convertir cosas con una cotizacion historica
+    List<Conversion> convertHistorical(Balance fromBalance, List<Currency> toCurrency, Date conversionRate) throws UnableToConvertException;
 }
