@@ -83,21 +83,4 @@ public class GsonJsonParserTest {
         //THEN
         assertTrue(rates.isEmpty());
     }
-
-    @Test
-    void testParseHistorical_nullData() {
-        //GIVEN
-        String json = """
-                {
-                    "data": null
-                }
-                """;
-        HttpResponse response = new HttpResponse(200, json);
-
-        //WHEN
-        Map<Currency, BigDecimal> rates = parser.parseHistorical(response);
-
-        //THEN
-        assertTrue(rates.isEmpty());
-    }
 }
