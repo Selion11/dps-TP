@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.Map;
 
 public interface JsonParser {
-    Map<Currency, BigDecimal> parseActual (HttpResponse response);
-    Map<Currency, BigDecimal> parseHistorical (HttpResponse response);
+    Map<Currency, BigDecimal> parseActual(HttpResponse response);
+
+    Map<Currency, BigDecimal> parseHistorical(HttpResponse response);
 }

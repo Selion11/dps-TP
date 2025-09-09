@@ -88,7 +88,7 @@ class BalanceConverterTest {
     }
 
     @Test
-    void getHistoricalRatesReturnsExpectedConversions() throws Exception {
+    void convertHistoricalReturnsExpectedConversions() throws Exception {
         // Given
         RateGetter rateGetter = mock(RateGetter.class);
         BalanceConverter converter = new BalanceConverter(rateGetter);
@@ -113,7 +113,7 @@ class BalanceConverterTest {
                 ));
 
         // When
-        List<Conversion> result = converter.getHistoricalRates(from, targets, date);
+        List<Conversion> result = converter.convertHistorical(from, targets, date);
 
         // Then
         assertTrue(result.contains(new Conversion(new Balance(eur, balanceAmount.multiply(rateEur)), rateEur)));
@@ -122,7 +122,7 @@ class BalanceConverterTest {
     }
 
     @Test
-    void getHistoricalRatesThrowsUnableToConvertExceptionWhenRateGetterFails() throws Exception {
+    void convertHistoricalThrowsUnableToConvertExceptionWhenRateGetterFails() throws Exception {
         // GIVEN
         RateGetter rateGetter = mock(RateGetter.class);
         BalanceConverter converter = new BalanceConverter(rateGetter);
@@ -139,7 +139,7 @@ class BalanceConverterTest {
 
         // THEN
         assertThrows(UnableToConvertException.class, () ->
-                converter.getHistoricalRates(from, targets, date)
+                converter.convertHistorical(from, targets, date)
         );
 
     }
